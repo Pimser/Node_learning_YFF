@@ -12,22 +12,22 @@ app.listen(3000);
 //{root: __dirname} setter rooten til directory name slik at den skrevne path-en fungerer
 
 app.get("/", (req, res) => {
-    //res.send("<p>Home page</p>");
-    res.render("index");
+    const blogs = [];
+    res.render("index", { title: "Home", blogs });
 });
 
 app.get("/about", (req, res) => {
     //res.send("<p>About page</p>");
-    res.render("about");
+    res.render("about", { title: "About" });
 });
 
 
 app.get("/blogs/create", (req, res) =>{
-    res.render("create");
+    res.render("create", { title: "Create" });
 })
 
 //404 page
 app.use((req, res) => {
-    res.status(404).render("404");
+    res.status(404).render("404", { title: "404" });
 })
 
