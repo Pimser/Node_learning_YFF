@@ -20,6 +20,7 @@ app.set("view engine", "ejs");
 
 //middleware and static files
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 //mongoose and mongo sandbox routes
@@ -76,11 +77,47 @@ app.get("/blogs", (req,res) => {
         .catch((err) =>{
             console.log(err);
         })
+});
+
+app.post("/blogs", (req, res) =>{
+    const blog = new Blog(req.body);
+
+    blog.save()
+        .then(() =>{
+            res.redirect("/blogs");
+        })
+        .catch((err) =>{
+            console.log(err);
+        })
 })
 
 app.get("/blogs/create", (req, res) =>{
     res.render("create", { title: "Create" });
 })
+
+app.get("/blogs/:id", (req, res) =>{
+    const id = req.params.id;
+    Blog.findById(id)
+        .then((result) =>{
+            res.render("details", {blog: result, title: "Blog Details"});
+        })
+        .catch((err) =>{
+            console.log(err);
+        })
+})
+
+app.delete("/blogs/:id", (req, res) =>{
+    const id = req.params.id
+
+    Blog.findByIdAndDelete(id)
+        .then((result) =>{
+            res.json({ redirect: "/blogs" })
+        })
+        .catch((err) =>{
+            console.log(err);
+        })
+})
+
 
 //404 page
 app.use((req, res) => {
